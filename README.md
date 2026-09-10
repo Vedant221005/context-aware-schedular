@@ -224,22 +224,14 @@ context-aware-schedular/
 │   ├── workload_50.csv
 │   ├── workload_100.csv
 │   └── workload_200.csv
-├── docs/
 ├── include/
 ├── results/
-│   ├── adaptive_decision_log.csv
-│   ├── comparison_results.csv
-│   └── edf_results.csv
+│   └── generated CSV reports and runtime logs
 ├── src/
-│   ├── ContextAwareScheduler.cpp
-│   ├── ContextManager.cpp
-│   ├── ContextScoreEngine.cpp
-│   ├── ContextTraceLoader.cpp
-│   ├── RealTimeContextMonitor.cpp
-│   ├── EDFScheduler.cpp
-│   ├── DatasetLoader.cpp
-│   └── ExperimentRunner.cpp
 └── test/
+    ├── test_contextmanager.cpp
+    ├── test_metrics.cpp
+    └── test_process.cpp
 ```
 
 ### Important Source Files
@@ -258,6 +250,8 @@ context-aware-schedular/
 - C++17-compatible compiler
 - CMake 3.10 or newer
 - Standard build tools for the selected compiler
+- Windows is required for live system monitoring. Other scheduling modes use
+  simulated context and can be built on any platform supported by the compiler.
 
 ## Build Instructions
 
@@ -290,6 +284,9 @@ On Windows:
 .\build\context-aware-scheduler.exe
 ```
 
+Run the executable from the repository root. The program reads input files from
+`data/` and creates or overwrites reports in `results/`.
+
 ### Sample Menu Output
 
 ```text
@@ -305,43 +302,60 @@ Context-Aware CPU Scheduler
 9. Diagnose Adaptive Scheduler
 10. Run Adaptive Round Robin
 11. Run EDF Scheduler
+12. Run Real-Time Context Mode
 Select an option:
 ```
 
-After selecting option 7:
+Options 7, 10, and 11 each provide their own mode selection where applicable:
 
 ```text
 Context Mode
 1. Static Context Mode
 2. Dynamic Context Trace Mode
+3. Real-Time Context Mode
 Select a mode:
 ```
 
 Use option 7 to view adaptive execution and aging analysis, option 8 to run
 the comparative evaluation, option 9 to inspect the detailed adaptive
-decision log, and option 10 to run Adaptive Round Robin.
-Option 11 runs EDF and reports deadline misses.
+decision log, and option 10 to run Adaptive Round Robin. Option 11 runs EDF and
+reports deadline misses. Option 12 is a direct shortcut to real-time context
+mode for the context-aware scheduler.
 
-## Screenshots
+## Input Data
 
-Add screenshots of the running simulator here:
+The supplied CSV files are:
 
-```text
-![Main menu](docs/screenshots/main-menu.png)
-![Adaptive scheduler output](docs/screenshots/adaptive-scheduler.png)
-![Experimental evaluation](docs/screenshots/experimental-evaluation.png)
-```
+- `data/workload_50.csv`, `workload_100.csv`, and `workload_200.csv`: process
+  workloads with `PID`, arrival time, burst time, priority, resource-impact
+  values, and foreground/background status.
+- `data/context_trace.csv`: timestamped simulated context snapshots with
+  battery, temperature, CPU utilization, and user activity.
+- `data/realtime_workload.csv`: deadline-bearing workload used by EDF.
 
-## Future Work
+## Generated Reports
 
-- Real-time battery monitoring
-- Real-time CPU utilization
-- Real-time CPU temperature
-- Live user activity detection
-- Dynamic context updates during execution
-- Larger workload and benchmark suites
-- Expanded automated scheduler tests
-- Visualization of Gantt charts and decision metrics
+The application writes CSV files on demand; existing files in `results/` are
+examples from previous runs. The main outputs are:
+
+- `comparison_results.csv`, `adaptive_rr_results.csv`, and `edf_results.csv`
+  for scheduler metrics.
+- `adaptive_decision_log.csv` and `context_change_log.csv` for adaptive
+  decisions and simulated context transitions.
+- `adaptive_rr_quantum_log.csv` for adaptive quantum changes.
+- `adaptivity_validation_report.csv` for dynamic-trace validation.
+- `realtime_context_log.csv`, `realtime_scheduler_log.csv`,
+  `realtime_quantum_log.csv`, and `realtime_adaptivity_log.csv` for live
+  monitoring and adaptation events.
+
+## Possible Future Improvements
+
+- Add a dedicated CMake test target for the existing unit-test sources.
+- Add configurable workload, context-trace, refresh-interval, and output-file
+  arguments instead of relying on the interactive menu and fixed paths.
+- Add cross-platform system-context providers and richer CPU-temperature
+  sensors.
+- Add visualization for Gantt charts, context changes, and CSV metrics.
 
 ## Contributing
 
