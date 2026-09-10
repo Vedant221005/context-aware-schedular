@@ -41,6 +41,10 @@ responsive scheduling policy that:
 13. CSV result export
 14. Comparative performance analysis
 15. Dynamic context trace support
+16. Adaptive Round Robin with context-based quantum selection
+17. Earliest Deadline First scheduling
+18. Windows real-time context monitoring
+19. Live priority and quantum adaptation
 
 ## Context Factors
 
@@ -54,6 +58,39 @@ The current simulated context includes:
 The `ContextScoreEngine` combines these factors with process attributes such as
 foreground/background status and resource impact to calculate a context score.
 The scheduler also calculates a separate process-impact contribution.
+
+## Adaptive Round Robin
+
+The Adaptive Round Robin scheduler extends time-sliced scheduling by selecting
+its quantum from the current context instead of using one fixed value. It uses
+a base quantum of 6 and clamps the result to the range 2 through 20:
+
+```text
+Quantum = BaseQuantum
+        + BatteryAdjustment
+        + TemperatureAdjustment
+        + CPUAdjustment
+        + UserActivityAdjustment
+```
+
+High battery and active-user conditions reduce the quantum, while low battery,
+high temperature, high CPU utilization, and inactive-user conditions increase
+it. In dynamic trace mode, the quantum is recalculated whenever a context
+snapshot is reached and the new value is used for subsequent time slices.
+
+Option 10 runs Adaptive Round Robin in either static or dynamic context mode.
+The scheduler reports quantum changes, ready queues, execution order, and
+quantum statistics. Its outputs are exported to
+[`results/adaptive_rr_results.csv`](results/adaptive_rr_results.csv) and
+[`results/adaptive_rr_quantum_log.csv`](results/adaptive_rr_quantum_log.csv).
+
+## Earliest Deadline First
+
+Option 11 runs the independent Earliest Deadline First scheduler using
+[`data/realtime_workload.csv`](data/realtime_workload.csv). EDF selects the
+ready process with the earliest deadline, breaking ties by arrival time and
+then PID. It reports `MET` or `MISSED` deadline status and exports metrics to
+[`results/edf_results.csv`](results/edf_results.csv).
 
 ## Adaptive Scheduling Approach
 
@@ -108,6 +145,24 @@ WaitingTime = max(0, CurrentTime - ArrivalTime)
 The aging bonus gradually raises the priority of processes that remain in the
 ready queue, reducing starvation while preserving context awareness.
 
+### Real-Time Context Mode
+
+Option 7 mode 3 (also available as option 12) samples live Windows system
+metrics every three seconds. The monitor uses `GetSystemPowerStatus`,
+`GetSystemTimes`, and `GetLastInputInfo`. CPU temperature is reported as `-1`
+when the platform does not expose a safe portable sensor value; scheduling
+continues normally. Context changes trigger priority recalculation for the
+Adaptive Context-Aware Scheduler and quantum recalculation for Adaptive Round
+Robin. EDF can also be run in real-time mode without changing its deadline
+ordering.
+
+Live observations and adaptation events are exported to:
+
+- `results/realtime_context_log.csv`
+- `results/realtime_scheduler_log.csv`
+- `results/realtime_quantum_log.csv`
+- `results/realtime_adaptivity_log.csv`
+
 ## Diagnostics and Decision Logging
 
 Option 9, **Diagnose Adaptive Scheduler**, displays each adaptive scheduling
@@ -131,7 +186,9 @@ Option 8, **Run Experimental Evaluation**, runs the same workload through:
 - FCFS
 - Round Robin
 - Priority
+- Adaptive Round Robin
 - Adaptive Context-Aware Scheduler with aging
+- Earliest Deadline First
 
 The evaluation reports average waiting time, average turnaround time, average
 response time, throughput, context switches, and execution time. Results are
@@ -145,7 +202,9 @@ exported to
 | FCFS | 208.78 | 219.24 | 208.78 |
 | Round Robin | 280.98 | 291.44 | 1.32 |
 | Priority | 145.70 | 156.16 | 145.70 |
+| Adaptive Round Robin | 286.98 | 297.44 | 62.66 |
 | Adaptive Context-Aware | 253.28 | 263.74 | 253.28 |
+| EDF | 5.20 | 9.20 | 5.20 |
 
 ### Aging Analysis
 
@@ -161,6 +220,7 @@ context-aware-schedular/
 ├── README.md
 ├── data/
 │   ├── context_trace.csv
+│   ├── realtime_workload.csv
 │   ├── workload_50.csv
 │   ├── workload_100.csv
 │   └── workload_200.csv
@@ -168,12 +228,15 @@ context-aware-schedular/
 ├── include/
 ├── results/
 │   ├── adaptive_decision_log.csv
-│   └── comparison_results.csv
+│   ├── comparison_results.csv
+│   └── edf_results.csv
 ├── src/
 │   ├── ContextAwareScheduler.cpp
 │   ├── ContextManager.cpp
 │   ├── ContextScoreEngine.cpp
 │   ├── ContextTraceLoader.cpp
+│   ├── RealTimeContextMonitor.cpp
+│   ├── EDFScheduler.cpp
 │   ├── DatasetLoader.cpp
 │   └── ExperimentRunner.cpp
 └── test/
@@ -185,8 +248,10 @@ context-aware-schedular/
 - `src/ContextManager.cpp` — simulated system context
 - `src/ContextScoreEngine.cpp` — context score calculation
 - `src/ContextTraceLoader.cpp` — dynamic context trace loading
+- `src/AdaptiveRoundRobin.cpp` — context-adaptive time-slice scheduling
 - `src/DatasetLoader.cpp` — CSV workload loading
 - `src/ExperimentRunner.cpp` — evaluation, diagnostics, and exports
+- `src/RealTimeContextMonitor.cpp` — Windows live context collection and safe fallbacks
 
 ## Requirements
 
@@ -238,6 +303,8 @@ Context-Aware CPU Scheduler
 7. Run Context-Aware Scheduler
 8. Run Experimental Evaluation
 9. Diagnose Adaptive Scheduler
+10. Run Adaptive Round Robin
+11. Run EDF Scheduler
 Select an option:
 ```
 
@@ -251,8 +318,9 @@ Select a mode:
 ```
 
 Use option 7 to view adaptive execution and aging analysis, option 8 to run
-the comparative evaluation, and option 9 to inspect the detailed adaptive
-decision log.
+the comparative evaluation, option 9 to inspect the detailed adaptive
+decision log, and option 10 to run Adaptive Round Robin.
+Option 11 runs EDF and reports deadline misses.
 
 ## Screenshots
 

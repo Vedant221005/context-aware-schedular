@@ -9,6 +9,8 @@
 
 #include "../include/ContextAwareScheduler.h"
 #include "../include/ContextManager.h"
+#include "../include/AdaptiveRoundRobin.h"
+#include "../include/EDFScheduler.h"
 #include "../include/FCFS.h"
 #include "../include/PriorityScheduler.h"
 #include "../include/RoundRobin.h"
@@ -44,14 +46,25 @@ void ExperimentRunner::runExperiment(const std::vector<Process>& workload) {
     context.updateUserActivity(true);
 
     ContextAwareScheduler adaptiveScheduler;
+    AdaptiveRoundRobin adaptiveRoundRobin;
+    EDFScheduler edfScheduler;
+    const std::vector<Process> realtimeWorkload =
+        edfScheduler.loadRealtimeWorkload("data/realtime_workload.csv");
+    const SchedulerResult adaptiveRoundRobinResult =
+        adaptiveRoundRobin.schedule(workload, context);
     std::vector<ExperimentResult> results;
     results.push_back(fromSchedulerResult("FCFS", runFCFS(workload)));
     results.push_back(fromSchedulerResult("RoundRobin", runRoundRobin(workload, 4)));
     results.push_back(fromSchedulerResult(
         "Priority", runPriorityScheduling(workload)));
     results.push_back(fromSchedulerResult(
+        "AdaptiveRoundRobin",
+        adaptiveRoundRobinResult));
+    results.push_back(fromSchedulerResult(
         "AdaptiveContextAware",
         adaptiveScheduler.schedule(workload, context)));
+    const SchedulerResult edfResult = edfScheduler.schedule(realtimeWorkload);
+    results.push_back(fromSchedulerResult("EDF", edfResult));
 
     std::cout << "\n====================================================\n";
     std::cout << "EXPERIMENT RESULTS\n";
@@ -65,6 +78,13 @@ void ExperimentRunner::runExperiment(const std::vector<Process>& workload) {
               << adaptiveScheduler.getAverageAgingBonus() << "\n";
     std::cout << "Processes Rescued By Aging: "
               << adaptiveScheduler.getProcessesRescuedByAging() << "\n";
+    std::filesystem::create_directories("results");
+    adaptiveRoundRobin.exportResults(
+        "results/adaptive_rr_results.csv",
+        adaptiveRoundRobinResult);
+    adaptiveRoundRobin.exportQuantumLog(
+        "results/adaptive_rr_quantum_log.csv");
+    edfScheduler.exportResults("results/edf_results.csv", edfResult);
     exportResults(results);
 }
 

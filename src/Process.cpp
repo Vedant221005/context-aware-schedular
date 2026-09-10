@@ -4,12 +4,14 @@
 Process::Process()
     : pid(0), arrivalTime(0), burstTime(0), priority(0), cpuUsage(0.0),
       batteryImpact(0.0), temperatureImpact(0.0), foregroundTask(false),
-      backgroundTask(false), contextScore(0.0) {}
+      backgroundTask(false), contextScore(0.0), deadline(0), period(0),
+      isRealTime(false) {}
 
 Process::Process(int pid_, int arrival, int burst, int priority_)
     : pid(pid_), arrivalTime(arrival), burstTime(burst), priority(priority_),
       cpuUsage(0.0), batteryImpact(0.0), temperatureImpact(0.0),
-      foregroundTask(false), backgroundTask(true), contextScore(0.0) {}
+      foregroundTask(false), backgroundTask(true), contextScore(0.0),
+      deadline(0), period(0), isRealTime(false) {}
 
 int Process::getPid() const { return pid; }
 void Process::setPid(int p) { pid = p; }

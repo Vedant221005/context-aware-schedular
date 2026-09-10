@@ -10,6 +10,8 @@
 #include "../include/ContextAwareScheduler.h"
 #include "../include/ContextScoreEngine.h"
 #include "../include/ContextTraceLoader.h"
+#include "../include/AdaptiveRoundRobin.h"
+#include "../include/EDFScheduler.h"
 #include "../include/DatasetLoader.h"
 #include "../include/ExperimentRunner.h"
 #include "../include/FCFS.h"
@@ -17,9 +19,15 @@
 #include "../include/PriorityScheduler.h"
 #include "../include/Process.h"
 #include "../include/RoundRobin.h"
+#include "../include/RealTimeContextMonitor.h"
 #include "../include/SchedulerResult.h"
 
 namespace {
+
+void exportRealtimeLogs(
+    const RealTimeContextMonitor& monitor,
+    const std::vector<ContextChange>& changes,
+    const std::vector<AdaptiveQuantumEvent>& quantumEvents);
 
 std::vector<Process> buildWorkload() {
     std::vector<Process> workload = {
@@ -340,9 +348,28 @@ void runContextAwareScheduler(const std::vector<Process>& workload) {
     std::cout << "\nContext Mode\n";
     std::cout << "1. Static Context Mode\n";
     std::cout << "2. Dynamic Context Trace Mode\n";
+    std::cout << "3. Real-Time Context Mode\n";
     std::cout << "Select a mode: ";
     int mode = 0;
     std::cin >> mode;
+
+    if (mode == 3) {
+        RealTimeContextMonitor monitor;
+        ContextManager initialContext;
+        initialContext.updateBatteryLevel(100.0);
+        initialContext.updateTemperature(-1.0);
+        initialContext.updateCPUUtilization(0.0);
+        initialContext.updateUserActivity(true);
+        ContextAwareScheduler scheduler;
+        std::cout << "\nStarting real-time context monitoring (3 second refresh).\n";
+        const SchedulerResult result =
+            scheduler.scheduleRealtime(workload, initialContext, monitor);
+        scheduler.displayExecutionOrder();
+        printOverallStats(result);
+        scheduler.displayContextChanges();
+        exportRealtimeLogs(monitor, scheduler.getContextChanges(), {});
+        return;
+    }
 
     if (mode == 2) {
         ContextTraceLoader traceLoader;
@@ -433,6 +460,143 @@ void runExperimentalEvaluation() {
     runner.runExperiment(dataset);
 }
 
+void runAdaptiveRoundRobin(const std::vector<Process>& workload) {
+    std::cout << "\nAdaptive Round Robin Mode\n";
+    std::cout << "1. Static Context Mode\n";
+    std::cout << "2. Dynamic Context Trace Mode\n";
+    std::cout << "3. Real-Time Context Mode\n";
+    std::cout << "Select a mode: ";
+    int mode = 0;
+    std::cin >> mode;
+
+    ContextManager context;
+    context.updateBatteryLevel(90.0);
+    context.updateTemperature(50.0);
+    context.updateCPUUtilization(45.0);
+    context.updateUserActivity(true);
+
+    AdaptiveRoundRobin scheduler;
+    SchedulerResult result;
+    if (mode == 3) {
+        RealTimeContextMonitor monitor;
+        std::cout << "\nStarting real-time context monitoring (3 second refresh).\n";
+        result = scheduler.scheduleRealtime(workload, context, monitor);
+        scheduler.displayDiagnostics();
+        runAndDisplay(result);
+        scheduler.exportResults("results/adaptive_rr_results.csv", result);
+        scheduler.exportQuantumLog("results/adaptive_rr_quantum_log.csv");
+        exportRealtimeLogs(monitor, {}, scheduler.getQuantumLog());
+        std::cout << "\nAdaptive Round Robin CSV exports completed.\n";
+        return;
+    } else if (mode == 2) {
+        ContextTraceLoader loader;
+        const std::vector<ContextSnapshot> trace =
+            loader.loadCSV("data/context_trace.csv");
+        if (trace.empty()) {
+            std::cerr << "Adaptive Round Robin stopped: context trace is "
+                         "empty or unavailable.\n";
+            return;
+        }
+
+        result = scheduler.schedule(workload, context, trace);
+    } else if (mode == 1) {
+        result = scheduler.schedule(workload, context);
+    } else {
+        std::cout << "Invalid Adaptive Round Robin mode.\n";
+        return;
+    }
+
+    scheduler.displayDiagnostics();
+    runAndDisplay(result);
+    scheduler.exportResults("results/adaptive_rr_results.csv", result);
+    scheduler.exportQuantumLog("results/adaptive_rr_quantum_log.csv");
+    std::cout << "\nAdaptive Round Robin CSV exports completed.\n";
+}
+
+void exportRealtimeLogs(
+    const RealTimeContextMonitor& monitor,
+    const std::vector<ContextChange>& changes,
+    const std::vector<AdaptiveQuantumEvent>& quantumEvents) {
+    std::filesystem::create_directories("results");
+    std::ofstream contextLog("results/realtime_context_log.csv");
+    contextLog << "Timestamp,Battery,Temperature,CPUUtilization,UserActive\n";
+    for (const Context& context : monitor.getSamples()) {
+        contextLog << context.timestamp << "," << context.batteryLevel << ","
+                   << context.cpuTemperature << "," << context.cpuUtilization
+                   << "," << (context.userActive ? "YES" : "NO") << "\n";
+    }
+
+    std::ofstream schedulerLog("results/realtime_scheduler_log.csv");
+    schedulerLog << "Time,Event,RunningProcess,PriorityChanges\n";
+    const auto& samples = monitor.getSamples();
+    for (std::size_t i = 1; i < samples.size(); ++i) {
+        const Context& previous = samples[i - 1];
+        const Context& current = samples[i];
+        if ((previous.batteryLevel >= 20.0) != (current.batteryLevel >= 20.0)) {
+            schedulerLog << current.timestamp << ",BATTERY_THRESHOLD,-1,0\n";
+        }
+        if ((previous.cpuUtilization <= 80.0) != (current.cpuUtilization <= 80.0)) {
+            schedulerLog << current.timestamp << ",CPU_OVERLOAD,-1,0\n";
+        }
+        if ((previous.cpuTemperature <= 80.0)
+            != (current.cpuTemperature <= 80.0)) {
+            schedulerLog << current.timestamp << ",THERMAL_STRESS,-1,0\n";
+        }
+        if (previous.userActive != current.userActive) {
+            schedulerLog << current.timestamp << ",USER_ACTIVITY_TRANSITION,-1,0\n";
+        }
+    }
+    for (const ContextChange& change : changes) {
+        schedulerLog << change.appliedAt << ",CONTEXT_CHANGE,"
+                     << change.runningPid << "," << change.priorityChanges.size()
+                     << "\n";
+    }
+
+    std::ofstream quantumLog("results/realtime_quantum_log.csv");
+    quantumLog << "Time,Battery,Temperature,CPUUtilization,UserActive,Quantum\n";
+    for (const AdaptiveQuantumEvent& event : quantumEvents) {
+        quantumLog << event.time << "," << event.context.battery << ","
+                   << event.context.temperature << ","
+                   << event.context.cpuUtilization << ","
+                   << (event.context.userActive ? "YES" : "NO") << ","
+                   << event.quantum << "\n";
+    }
+
+    std::ofstream adaptivityLog("results/realtime_adaptivity_log.csv");
+    adaptivityLog << "Time,Event,Details\n";
+    for (const ContextChange& change : changes) {
+        adaptivityLog << change.appliedAt << ",PRIORITY_CHANGE,"
+                      << change.priorityChanges.size() << " processes\n";
+    }
+    for (const AdaptiveQuantumEvent& event : quantumEvents) {
+        adaptivityLog << event.time << ",QUANTUM_UPDATE,"
+                      << event.quantum << "\n";
+    }
+}
+
+void runEDFScheduler() {
+    EDFScheduler scheduler;
+    const std::vector<Process> workload =
+        scheduler.loadRealtimeWorkload("data/realtime_workload.csv");
+    if (workload.empty()) {
+        std::cerr << "EDF stopped: realtime_workload.csv is empty or unavailable.\n";
+        return;
+    }
+    std::cout << "\nEDF Mode\n1. Static Mode\n2. Real-Time Context Mode\nSelect a mode: ";
+    int mode = 0;
+    std::cin >> mode;
+    RealTimeContextMonitor monitor;
+    const SchedulerResult result = mode == 2
+        ? scheduler.scheduleRealtime(workload, monitor)
+        : scheduler.schedule(workload);
+    scheduler.display(result);
+    scheduler.exportResults("results/edf_results.csv", result);
+    if (mode == 2) {
+        exportRealtimeLogs(monitor, {}, {});
+    }
+    std::cout << "\nEDF results exported to results/edf_results.csv\n";
+}
+
 }  // namespace
 
 int main() {
@@ -449,6 +613,9 @@ int main() {
         std::cout << "7. Run Context-Aware Scheduler\n";
         std::cout << "8. Run Experimental Evaluation\n";
         std::cout << "9. Diagnose Adaptive Scheduler\n";
+        std::cout << "10. Run Adaptive Round Robin\n";
+        std::cout << "11. Run EDF Scheduler\n";
+        std::cout << "12. Run Real-Time Context Mode\n";
         std::cout << "Select an option: ";
 
         int choice = 0;
@@ -487,6 +654,15 @@ int main() {
                 runner.runAdaptiveDiagnostics(dataset);
                 break;
             }
+            case 10:
+                runAdaptiveRoundRobin(workload);
+                break;
+            case 11:
+                runEDFScheduler();
+                break;
+            case 12:
+                runContextAwareScheduler(workload);
+                break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;

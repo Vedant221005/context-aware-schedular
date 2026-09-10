@@ -6,6 +6,7 @@
 #include "ContextScoreEngine.h"
 #include "ContextTraceLoader.h"
 #include "Process.h"
+#include "RealTimeContextMonitor.h"
 #include "SchedulerResult.h"
 
 struct DynamicProcess {
@@ -60,6 +61,11 @@ public:
         ContextManager context,
         const std::vector<ContextSnapshot>& contextTrace);
 
+    SchedulerResult scheduleRealtime(
+        std::vector<Process> processes,
+        ContextManager context,
+        RealTimeContextMonitor& monitor);
+
     double calculateProcessImpact(
         const Process& process,
         const ContextManager& context) const;
@@ -77,7 +83,8 @@ private:
     SchedulerResult scheduleInternal(
         std::vector<Process> processes,
         ContextManager context,
-        const std::vector<ContextSnapshot>* contextTrace);
+        const std::vector<ContextSnapshot>* contextTrace,
+        RealTimeContextMonitor* monitor = nullptr);
     void applyContextSnapshot(
         const ContextSnapshot& snapshot,
         ContextManager& context,

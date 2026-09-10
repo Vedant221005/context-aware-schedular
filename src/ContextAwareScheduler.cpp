@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <thread>
 
 namespace {
 
@@ -58,10 +59,18 @@ SchedulerResult ContextAwareScheduler::schedule(
     return scheduleInternal(processes, context, &contextTrace);
 }
 
+SchedulerResult ContextAwareScheduler::scheduleRealtime(
+    std::vector<Process> processes,
+    ContextManager context,
+    RealTimeContextMonitor& monitor) {
+    return scheduleInternal(processes, context, nullptr, &monitor);
+}
+
 SchedulerResult ContextAwareScheduler::scheduleInternal(
     std::vector<Process> processes,
     ContextManager context,
-    const std::vector<ContextSnapshot>* contextTrace) {
+    const std::vector<ContextSnapshot>* contextTrace,
+    RealTimeContextMonitor* monitor) {
     SchedulerResult result;
     result.schedulerName = "Adaptive Context-Aware Scheduler";
     dynamicProcesses.clear();
@@ -94,8 +103,41 @@ SchedulerResult ContextAwareScheduler::scheduleInternal(
     double turnaroundSum = 0.0;
     double responseSum = 0.0;
     double agingBonusSum = 0.0;
+    bool hasLiveContext = false;
+    Context lastLiveContext;
 
     while (completedCount < static_cast<int>(dynamicProcesses.size())) {
+        if (monitor != nullptr) {
+            if (hasLiveContext) {
+                std::this_thread::sleep_for(monitor->getRefreshInterval());
+            }
+            const Context liveContext = monitor->sample();
+            const bool changed = !hasLiveContext
+                || liveContext.batteryLevel != lastLiveContext.batteryLevel
+                || liveContext.cpuTemperature != lastLiveContext.cpuTemperature
+                || liveContext.cpuUtilization != lastLiveContext.cpuUtilization
+                || liveContext.userActive != lastLiveContext.userActive;
+            if (changed) {
+                std::cout << "\nCONTEXT CHANGE DETECTED\n"
+                          << "Battery: " << liveContext.batteryLevel << "%\n"
+                          << "CPU Usage: " << liveContext.cpuUtilization << "%\n"
+                          << "Temperature: " << liveContext.cpuTemperature << "C\n"
+                          << "User Active: "
+                          << (liveContext.userActive ? "YES" : "NO") << "\n"
+                          << "Scheduling priorities recalculated for ready processes.\n";
+                ContextSnapshot snapshot{
+                    currentTime,
+                    liveContext.batteryLevel,
+                    liveContext.cpuTemperature,
+                    liveContext.cpuUtilization,
+                    liveContext.userActive
+                };
+                applyContextSnapshot(
+                    snapshot, context, scoreEngine, completed, currentTime, -1);
+                lastLiveContext = liveContext;
+                hasLiveContext = true;
+            }
+        }
         if (contextTrace != nullptr) {
             while (nextContextUpdate < contextTrace->size()
                 && (*contextTrace)[nextContextUpdate].time <= currentTime) {

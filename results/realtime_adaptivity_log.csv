@@ -1,0 +1,6 @@
+Time,Event,Details
+0,PRIORITY_CHANGE,5 processes
+10,PRIORITY_CHANGE,4 processes
+22,PRIORITY_CHANGE,3 processes
+37,PRIORITY_CHANGE,2 processes
+45,PRIORITY_CHANGE,1 processes

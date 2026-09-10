@@ -713,7 +713,12 @@ CMakeFiles/context-aware-scheduler.dir/src/main.cpp.obj: \
   D:/4year/context-aware-schedular/src/../include/ContextScoreEngine.h \
   D:/4year/context-aware-schedular/src/../include/Process.h \
   D:/4year/context-aware-schedular/src/../include/ContextTraceLoader.h \
+  D:/4year/context-aware-schedular/src/../include/RealTimeContextMonitor.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/chrono \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/forward_list \
   D:/4year/context-aware-schedular/src/../include/SchedulerResult.h \
+  D:/4year/context-aware-schedular/src/../include/AdaptiveRoundRobin.h \
+  D:/4year/context-aware-schedular/src/../include/EDFScheduler.h \
   D:/4year/context-aware-schedular/src/../include/DatasetLoader.h \
   D:/4year/context-aware-schedular/src/../include/ExperimentRunner.h \
   D:/4year/context-aware-schedular/src/../include/FCFS.h \

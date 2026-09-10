@@ -128,6 +128,30 @@ context-aware-scheduler/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/build
 .PHONY : context-aware-scheduler/fast
 
+src/AdaptiveRoundRobin.obj: src/AdaptiveRoundRobin.cpp.obj
+.PHONY : src/AdaptiveRoundRobin.obj
+
+# target to build an object file
+src/AdaptiveRoundRobin.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/AdaptiveRoundRobin.cpp.obj
+.PHONY : src/AdaptiveRoundRobin.cpp.obj
+
+src/AdaptiveRoundRobin.i: src/AdaptiveRoundRobin.cpp.i
+.PHONY : src/AdaptiveRoundRobin.i
+
+# target to preprocess a source file
+src/AdaptiveRoundRobin.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/AdaptiveRoundRobin.cpp.i
+.PHONY : src/AdaptiveRoundRobin.cpp.i
+
+src/AdaptiveRoundRobin.s: src/AdaptiveRoundRobin.cpp.s
+.PHONY : src/AdaptiveRoundRobin.s
+
+# target to generate assembly for a file
+src/AdaptiveRoundRobin.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/AdaptiveRoundRobin.cpp.s
+.PHONY : src/AdaptiveRoundRobin.cpp.s
+
 src/ContextAwareScheduler.obj: src/ContextAwareScheduler.cpp.obj
 .PHONY : src/ContextAwareScheduler.obj
 
@@ -247,6 +271,30 @@ src/DatasetLoader.s: src/DatasetLoader.cpp.s
 src/DatasetLoader.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.s
 .PHONY : src/DatasetLoader.cpp.s
+
+src/EDFScheduler.obj: src/EDFScheduler.cpp.obj
+.PHONY : src/EDFScheduler.obj
+
+# target to build an object file
+src/EDFScheduler.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/EDFScheduler.cpp.obj
+.PHONY : src/EDFScheduler.cpp.obj
+
+src/EDFScheduler.i: src/EDFScheduler.cpp.i
+.PHONY : src/EDFScheduler.i
+
+# target to preprocess a source file
+src/EDFScheduler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/EDFScheduler.cpp.i
+.PHONY : src/EDFScheduler.cpp.i
+
+src/EDFScheduler.s: src/EDFScheduler.cpp.s
+.PHONY : src/EDFScheduler.s
+
+# target to generate assembly for a file
+src/EDFScheduler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/EDFScheduler.cpp.s
+.PHONY : src/EDFScheduler.cpp.s
 
 src/ExperimentRunner.obj: src/ExperimentRunner.cpp.obj
 .PHONY : src/ExperimentRunner.obj
@@ -368,6 +416,30 @@ src/Process.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.s
 .PHONY : src/Process.cpp.s
 
+src/RealTimeContextMonitor.obj: src/RealTimeContextMonitor.cpp.obj
+.PHONY : src/RealTimeContextMonitor.obj
+
+# target to build an object file
+src/RealTimeContextMonitor.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/RealTimeContextMonitor.cpp.obj
+.PHONY : src/RealTimeContextMonitor.cpp.obj
+
+src/RealTimeContextMonitor.i: src/RealTimeContextMonitor.cpp.i
+.PHONY : src/RealTimeContextMonitor.i
+
+# target to preprocess a source file
+src/RealTimeContextMonitor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/RealTimeContextMonitor.cpp.i
+.PHONY : src/RealTimeContextMonitor.cpp.i
+
+src/RealTimeContextMonitor.s: src/RealTimeContextMonitor.cpp.s
+.PHONY : src/RealTimeContextMonitor.s
+
+# target to generate assembly for a file
+src/RealTimeContextMonitor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/RealTimeContextMonitor.cpp.s
+.PHONY : src/RealTimeContextMonitor.cpp.s
+
 src/RoundRobin.obj: src/RoundRobin.cpp.obj
 .PHONY : src/RoundRobin.obj
 
@@ -425,6 +497,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... context-aware-scheduler
+	@echo ... src/AdaptiveRoundRobin.obj
+	@echo ... src/AdaptiveRoundRobin.i
+	@echo ... src/AdaptiveRoundRobin.s
 	@echo ... src/ContextAwareScheduler.obj
 	@echo ... src/ContextAwareScheduler.i
 	@echo ... src/ContextAwareScheduler.s
@@ -440,6 +515,9 @@ help:
 	@echo ... src/DatasetLoader.obj
 	@echo ... src/DatasetLoader.i
 	@echo ... src/DatasetLoader.s
+	@echo ... src/EDFScheduler.obj
+	@echo ... src/EDFScheduler.i
+	@echo ... src/EDFScheduler.s
 	@echo ... src/ExperimentRunner.obj
 	@echo ... src/ExperimentRunner.i
 	@echo ... src/ExperimentRunner.s
@@ -455,6 +533,9 @@ help:
 	@echo ... src/Process.obj
 	@echo ... src/Process.i
 	@echo ... src/Process.s
+	@echo ... src/RealTimeContextMonitor.obj
+	@echo ... src/RealTimeContextMonitor.i
+	@echo ... src/RealTimeContextMonitor.s
 	@echo ... src/RoundRobin.obj
 	@echo ... src/RoundRobin.i
 	@echo ... src/RoundRobin.s

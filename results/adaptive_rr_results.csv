@@ -1,0 +1,2 @@
+Scheduler,AverageWaitingTime,AverageTurnaroundTime,AverageResponseTime,Throughput,ContextSwitches,ExecutionTime
+Adaptive Round Robin,286.9800,297.4400,62.6600,0.0956,190,523

@@ -16,6 +16,9 @@ public:
     bool foregroundTask;
     bool backgroundTask;
     double contextScore;
+    int deadline;
+    int period;
+    bool isRealTime;
 
     // Constructors
     Process();
