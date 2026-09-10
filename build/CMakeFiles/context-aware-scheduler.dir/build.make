@@ -116,11 +116,26 @@ CMakeFiles/context-aware-scheduler.dir/src/ContextScoreEngine.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/context-aware-scheduler.dir/src/ContextScoreEngine.cpp.s"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\4year\context-aware-schedular\src\ContextScoreEngine.cpp -o CMakeFiles\context-aware-scheduler.dir\src\ContextScoreEngine.cpp.s
 
+CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj: CMakeFiles/context-aware-scheduler.dir/flags.make
+CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
+CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj: D:/4year/context-aware-schedular/src/ContextTraceLoader.cpp
+CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj"
+	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\ContextTraceLoader.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\ContextTraceLoader.cpp.obj -c D:\4year\context-aware-schedular\src\ContextTraceLoader.cpp
+
+CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.i"
+	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E D:\4year\context-aware-schedular\src\ContextTraceLoader.cpp > CMakeFiles\context-aware-scheduler.dir\src\ContextTraceLoader.cpp.i
+
+CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.s"
+	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S D:\4year\context-aware-schedular\src\ContextTraceLoader.cpp -o CMakeFiles\context-aware-scheduler.dir\src\ContextTraceLoader.cpp.s
+
 CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj: CMakeFiles/context-aware-scheduler.dir/flags.make
 CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
 CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj: D:/4year/context-aware-schedular/src/DatasetLoader.cpp
 CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\DatasetLoader.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\DatasetLoader.cpp.obj -c D:\4year\context-aware-schedular\src\DatasetLoader.cpp
 
 CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.i: cmake_force
@@ -135,7 +150,7 @@ CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj: CMakeFiles/
 CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
 CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj: D:/4year/context-aware-schedular/src/ExperimentRunner.cpp
 CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\ExperimentRunner.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\ExperimentRunner.cpp.obj -c D:\4year\context-aware-schedular\src\ExperimentRunner.cpp
 
 CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.i: cmake_force
@@ -150,7 +165,7 @@ CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj: CMakeFiles/context-awar
 CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
 CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj: D:/4year/context-aware-schedular/src/FCFS.cpp
 CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\FCFS.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\FCFS.cpp.obj -c D:\4year\context-aware-schedular\src\FCFS.cpp
 
 CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.i: cmake_force
@@ -165,7 +180,7 @@ CMakeFiles/context-aware-scheduler.dir/src/Metrics.cpp.obj: CMakeFiles/context-a
 CMakeFiles/context-aware-scheduler.dir/src/Metrics.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
 CMakeFiles/context-aware-scheduler.dir/src/Metrics.cpp.obj: D:/4year/context-aware-schedular/src/Metrics.cpp
 CMakeFiles/context-aware-scheduler.dir/src/Metrics.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/Metrics.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/Metrics.cpp.obj"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/Metrics.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\Metrics.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\Metrics.cpp.obj -c D:\4year\context-aware-schedular\src\Metrics.cpp
 
 CMakeFiles/context-aware-scheduler.dir/src/Metrics.cpp.i: cmake_force
@@ -180,7 +195,7 @@ CMakeFiles/context-aware-scheduler.dir/src/PriorityScheduler.cpp.obj: CMakeFiles
 CMakeFiles/context-aware-scheduler.dir/src/PriorityScheduler.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
 CMakeFiles/context-aware-scheduler.dir/src/PriorityScheduler.cpp.obj: D:/4year/context-aware-schedular/src/PriorityScheduler.cpp
 CMakeFiles/context-aware-scheduler.dir/src/PriorityScheduler.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/PriorityScheduler.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/PriorityScheduler.cpp.obj"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/PriorityScheduler.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\PriorityScheduler.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\PriorityScheduler.cpp.obj -c D:\4year\context-aware-schedular\src\PriorityScheduler.cpp
 
 CMakeFiles/context-aware-scheduler.dir/src/PriorityScheduler.cpp.i: cmake_force
@@ -195,7 +210,7 @@ CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.obj: CMakeFiles/context-a
 CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
 CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.obj: D:/4year/context-aware-schedular/src/Process.cpp
 CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.obj"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\Process.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\Process.cpp.obj -c D:\4year\context-aware-schedular\src\Process.cpp
 
 CMakeFiles/context-aware-scheduler.dir/src/Process.cpp.i: cmake_force
@@ -210,7 +225,7 @@ CMakeFiles/context-aware-scheduler.dir/src/RoundRobin.cpp.obj: CMakeFiles/contex
 CMakeFiles/context-aware-scheduler.dir/src/RoundRobin.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
 CMakeFiles/context-aware-scheduler.dir/src/RoundRobin.cpp.obj: D:/4year/context-aware-schedular/src/RoundRobin.cpp
 CMakeFiles/context-aware-scheduler.dir/src/RoundRobin.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/RoundRobin.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/RoundRobin.cpp.obj"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/RoundRobin.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\RoundRobin.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\RoundRobin.cpp.obj -c D:\4year\context-aware-schedular\src\RoundRobin.cpp
 
 CMakeFiles/context-aware-scheduler.dir/src/RoundRobin.cpp.i: cmake_force
@@ -225,7 +240,7 @@ CMakeFiles/context-aware-scheduler.dir/src/main.cpp.obj: CMakeFiles/context-awar
 CMakeFiles/context-aware-scheduler.dir/src/main.cpp.obj: CMakeFiles/context-aware-scheduler.dir/includes_CXX.rsp
 CMakeFiles/context-aware-scheduler.dir/src/main.cpp.obj: D:/4year/context-aware-schedular/src/main.cpp
 CMakeFiles/context-aware-scheduler.dir/src/main.cpp.obj: CMakeFiles/context-aware-scheduler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/main.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/context-aware-scheduler.dir/src/main.cpp.obj"
 	C:\tools\llvm-mingw\llvm-mingw-20260616-ucrt-x86_64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/context-aware-scheduler.dir/src/main.cpp.obj -MF CMakeFiles\context-aware-scheduler.dir\src\main.cpp.obj.d -o CMakeFiles\context-aware-scheduler.dir\src\main.cpp.obj -c D:\4year\context-aware-schedular\src\main.cpp
 
 CMakeFiles/context-aware-scheduler.dir/src/main.cpp.i: cmake_force
@@ -241,6 +256,7 @@ context__aware__scheduler_OBJECTS = \
 "CMakeFiles/context-aware-scheduler.dir/src/ContextAwareScheduler.cpp.obj" \
 "CMakeFiles/context-aware-scheduler.dir/src/ContextManager.cpp.obj" \
 "CMakeFiles/context-aware-scheduler.dir/src/ContextScoreEngine.cpp.obj" \
+"CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj" \
 "CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj" \
 "CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj" \
 "CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj" \
@@ -256,6 +272,7 @@ context__aware__scheduler_EXTERNAL_OBJECTS =
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/src/ContextAwareScheduler.cpp.obj
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/src/ContextManager.cpp.obj
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/src/ContextScoreEngine.cpp.obj
+context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/src/FCFS.cpp.obj
@@ -268,7 +285,7 @@ context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/build.make
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/linkLibs.rsp
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/objects1.rsp
 context-aware-scheduler.exe: CMakeFiles/context-aware-scheduler.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable context-aware-scheduler.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\4year\context-aware-schedular\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable context-aware-scheduler.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\context-aware-scheduler.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

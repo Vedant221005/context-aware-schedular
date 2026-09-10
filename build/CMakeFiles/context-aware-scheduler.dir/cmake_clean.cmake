@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/context-aware-scheduler.dir/src/ContextManager.cpp.obj.d"
   "CMakeFiles/context-aware-scheduler.dir/src/ContextScoreEngine.cpp.obj"
   "CMakeFiles/context-aware-scheduler.dir/src/ContextScoreEngine.cpp.obj.d"
+  "CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj"
+  "CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj.d"
   "CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj"
   "CMakeFiles/context-aware-scheduler.dir/src/DatasetLoader.cpp.obj.d"
   "CMakeFiles/context-aware-scheduler.dir/src/ExperimentRunner.cpp.obj"

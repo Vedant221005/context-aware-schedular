@@ -40,6 +40,7 @@ responsive scheduling policy that:
 12. Scheduling decision logging
 13. CSV result export
 14. Comparative performance analysis
+15. Dynamic context trace support
 
 ## Context Factors
 
@@ -67,6 +68,26 @@ At every scheduling decision, the adaptive scheduler:
 The scheduler is non-preemptive: once selected, a process runs until its burst
 is complete. FCFS, Round Robin, and Priority scheduling retain their own
 existing behavior and are evaluated independently.
+
+### Dynamic Context Trace Mode
+
+Option 7 supports static context and dynamic context trace execution. Dynamic
+mode loads [`data/context_trace.csv`](data/context_trace.csv), using:
+
+```text
+Time,Battery,Temperature,CPUUtilization,UserActive
+0,90,50,45,1
+20,80,55,60,1
+40,65,70,85,1
+60,40,85,90,0
+80,25,90,95,0
+```
+
+When simulation time reaches a trace timestamp, the scheduler updates the
+`ContextManager`, recalculates context scores and dynamic priorities for
+unfinished processes, and records the transition. Context transitions display
+affected processes and priority changes and are exported to
+[`results/context_change_log.csv`](results/context_change_log.csv).
 
 ### Dynamic Priority Formula
 
@@ -139,6 +160,7 @@ context-aware-schedular/
 ├── CMakeLists.txt
 ├── README.md
 ├── data/
+│   ├── context_trace.csv
 │   ├── workload_50.csv
 │   ├── workload_100.csv
 │   └── workload_200.csv
@@ -151,6 +173,7 @@ context-aware-schedular/
 │   ├── ContextAwareScheduler.cpp
 │   ├── ContextManager.cpp
 │   ├── ContextScoreEngine.cpp
+│   ├── ContextTraceLoader.cpp
 │   ├── DatasetLoader.cpp
 │   └── ExperimentRunner.cpp
 └── test/
@@ -161,6 +184,7 @@ context-aware-schedular/
 - `src/ContextAwareScheduler.cpp` — adaptive scheduling and aging logic
 - `src/ContextManager.cpp` — simulated system context
 - `src/ContextScoreEngine.cpp` — context score calculation
+- `src/ContextTraceLoader.cpp` — dynamic context trace loading
 - `src/DatasetLoader.cpp` — CSV workload loading
 - `src/ExperimentRunner.cpp` — evaluation, diagnostics, and exports
 
@@ -215,6 +239,15 @@ Context-Aware CPU Scheduler
 8. Run Experimental Evaluation
 9. Diagnose Adaptive Scheduler
 Select an option:
+```
+
+After selecting option 7:
+
+```text
+Context Mode
+1. Static Context Mode
+2. Dynamic Context Trace Mode
+Select a mode:
 ```
 
 Use option 7 to view adaptive execution and aging analysis, option 8 to run

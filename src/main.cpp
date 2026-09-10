@@ -1,11 +1,15 @@
 #include <algorithm>
+#include <filesystem>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 #include "../include/ContextManager.h"
 #include "../include/ContextAwareScheduler.h"
 #include "../include/ContextScoreEngine.h"
+#include "../include/ContextTraceLoader.h"
 #include "../include/DatasetLoader.h"
 #include "../include/ExperimentRunner.h"
 #include "../include/FCFS.h"
@@ -200,7 +204,180 @@ void calculateContextScores(const std::vector<Process>& workload) {
     displayContextScenario("SCENARIO 2", 15.0, 85.0, 90.0, false, workload, scoreEngine);
 }
 
+void runAdaptivityValidation(
+    const std::vector<Process>& workload,
+    const ContextManager& initialContext,
+    const SchedulerResult& dynamicResult,
+    const ContextAwareScheduler& dynamicScheduler) {
+    const auto& changes = dynamicScheduler.getContextChanges();
+    if (changes.size() < 2) {
+        std::cerr << "Adaptivity validation requires an initial and changed "
+                     "context snapshot.\n";
+        return;
+    }
+
+    const ContextChange& change = changes[1];
+    std::vector<int> beforeOrder;
+    std::vector<int> afterOrder;
+    for (const auto& segment : dynamicResult.gantt) {
+        if (segment.startTime < change.appliedAt) {
+            beforeOrder.push_back(segment.pid);
+        } else {
+            afterOrder.push_back(segment.pid);
+        }
+    }
+
+    ContextAwareScheduler staticScheduler;
+    const SchedulerResult staticResult =
+        staticScheduler.schedule(workload, initialContext);
+    const std::size_t comparisonIndex = beforeOrder.size();
+    const bool schedulingOrderChanged =
+        dynamicResult.gantt.size() != staticResult.gantt.size()
+        || std::equal(
+            dynamicResult.gantt.begin(),
+            dynamicResult.gantt.end(),
+            staticResult.gantt.begin(),
+            [](const GanttSegment& dynamicSegment,
+               const GanttSegment& staticSegment) {
+                return dynamicSegment.pid == staticSegment.pid;
+            }) == false;
+    const bool readyQueueReordered =
+        change.readyQueueBefore != change.readyQueueAfter;
+    const bool runningProcessReplaced = false;
+
+    std::cout << "\n====================================================\n";
+    std::cout << "ADAPTIVITY VALIDATION\n";
+    std::cout << "====================================================\n";
+    std::cout << "Current simulation time: " << change.appliedAt << "\n";
+    std::cout << "Current running process: P" << change.runningPid << "\n";
+    std::cout << "\nReady Queue Before Context Update: ";
+    for (const int pid : change.readyQueueBefore) {
+        std::cout << "P" << pid << " ";
+    }
+    std::cout << "\nReady Queue After Context Update: ";
+    for (const int pid : change.readyQueueAfter) {
+        std::cout << "P" << pid << " ";
+    }
+    std::cout << "\n\nDynamic Priorities Before Update:\n";
+    for (const auto& priority : change.prioritiesBefore) {
+        std::cout << "P" << priority.pid << "=" << priority.priority << " ";
+    }
+    std::cout << "\nDynamic Priorities After Update:\n";
+    for (const auto& priority : change.prioritiesAfter) {
+        std::cout << "P" << priority.pid << "=" << priority.priority << " ";
+    }
+    std::cout << "\n\nExecution Order Before Context Change:\n";
+    for (const int pid : beforeOrder) {
+        std::cout << "P" << pid << " ";
+    }
+    std::cout << "\nExecution Order After Context Change:\n";
+    for (const int pid : afterOrder) {
+        std::cout << "P" << pid << " ";
+    }
+    std::cout << "\n\nWas Scheduling Order Changed? "
+              << (schedulingOrderChanged ? "YES" : "NO") << "\n";
+    std::cout << "Was Ready Queue Reordered? "
+              << (readyQueueReordered ? "YES" : "NO") << "\n";
+    std::cout << "Was Running Process Replaced? "
+              << (runningProcessReplaced ? "YES" : "NO") << "\n";
+
+    if (readyQueueReordered && schedulingOrderChanged
+        && comparisonIndex < staticResult.gantt.size()
+        && comparisonIndex < dynamicResult.gantt.size()
+        && dynamicResult.gantt[comparisonIndex].pid
+            != staticResult.gantt[comparisonIndex].pid) {
+        std::cout << "\nSUCCESS:\nRuntime re-scheduling detected.\n"
+                     "Scheduler adapts execution decisions based on changing "
+                     "system context.\n";
+    } else {
+        std::cout << "\nWARNING:\nContext changes affected priorities but did "
+                     "not affect scheduling decisions.\n"
+                     "Scheduler is priority-adaptive but not runtime-adaptive.\n";
+    }
+
+    std::filesystem::create_directories("results");
+    std::ofstream report("results/adaptivity_validation_report.csv");
+    if (!report.is_open()) {
+        std::cerr << "Unable to write adaptivity validation report.\n";
+        return;
+    }
+    report << "EventTime,AppliedAt,RunningProcess,PID,PriorityBefore,"
+               "PriorityAfter,ReadyQueueBefore,ReadyQueueAfter,"
+               "WasSchedulingOrderChanged,WasReadyQueueReordered,"
+               "WasRunningProcessReplaced\n";
+    auto queueText = [](const std::vector<int>& queue) {
+        std::ostringstream output;
+        for (std::size_t i = 0; i < queue.size(); ++i) {
+            if (i > 0) {
+                output << " ";
+            }
+            output << "P" << queue[i];
+        }
+        return output.str();
+    };
+    for (const auto& before : change.prioritiesBefore) {
+        double afterValue = 0.0;
+        for (const auto& after : change.prioritiesAfter) {
+            if (after.pid == before.pid) {
+                afterValue = after.priority;
+                break;
+            }
+        }
+        report << change.snapshot.time << "," << change.appliedAt << ",P"
+               << change.runningPid << ",P" << before.pid << ","
+               << before.priority << "," << afterValue << ",\""
+               << queueText(change.readyQueueBefore) << "\",\""
+               << queueText(change.readyQueueAfter) << "\","
+               << (schedulingOrderChanged ? "YES" : "NO") << ","
+               << (readyQueueReordered ? "YES" : "NO") << ","
+               << (runningProcessReplaced ? "YES" : "NO") << "\n";
+    }
+    std::cout << "\nAdaptivity validation exported to "
+                 "results/adaptivity_validation_report.csv\n";
+}
+
 void runContextAwareScheduler(const std::vector<Process>& workload) {
+    std::cout << "\nContext Mode\n";
+    std::cout << "1. Static Context Mode\n";
+    std::cout << "2. Dynamic Context Trace Mode\n";
+    std::cout << "Select a mode: ";
+    int mode = 0;
+    std::cin >> mode;
+
+    if (mode == 2) {
+        ContextTraceLoader traceLoader;
+        const std::vector<ContextSnapshot> trace =
+            traceLoader.loadCSV("data/context_trace.csv");
+        if (trace.empty()) {
+            std::cerr << "Dynamic context mode stopped: context_trace.csv is "
+                         "empty or unavailable.\n";
+            return;
+        }
+
+        ContextManager initialContext;
+        initialContext.updateBatteryLevel(90.0);
+        initialContext.updateTemperature(50.0);
+        initialContext.updateCPUUtilization(45.0);
+        initialContext.updateUserActivity(true);
+
+        ContextAwareScheduler scheduler;
+        const SchedulerResult result =
+            scheduler.schedule(workload, initialContext, trace);
+        scheduler.displayExecutionOrder();
+        scheduler.displayContextChanges();
+        printOverallStats(result);
+        scheduler.exportContextChanges("results/context_change_log.csv");
+        runAdaptivityValidation(workload, initialContext, result, scheduler);
+        std::cout << "\nContext changes exported to "
+                     "results/context_change_log.csv\n";
+        return;
+    }
+
+    if (mode != 1) {
+        std::cout << "Invalid context mode.\n";
+        return;
+    }
+
     ContextAwareScheduler scheduler;
 
     ContextManager scenarioOne;

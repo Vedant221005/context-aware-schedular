@@ -1,6 +1,7 @@
 #include "../include/ContextAwareScheduler.h"
 
 #include <algorithm>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -47,6 +48,20 @@ double ContextAwareScheduler::calculateProcessImpact(
 SchedulerResult ContextAwareScheduler::schedule(
     std::vector<Process> processes,
     const ContextManager& context) {
+    return scheduleInternal(processes, context, nullptr);
+}
+
+SchedulerResult ContextAwareScheduler::schedule(
+    std::vector<Process> processes,
+    ContextManager context,
+    const std::vector<ContextSnapshot>& contextTrace) {
+    return scheduleInternal(processes, context, &contextTrace);
+}
+
+SchedulerResult ContextAwareScheduler::scheduleInternal(
+    std::vector<Process> processes,
+    ContextManager context,
+    const std::vector<ContextSnapshot>* contextTrace) {
     SchedulerResult result;
     result.schedulerName = "Adaptive Context-Aware Scheduler";
     dynamicProcesses.clear();
@@ -55,6 +70,7 @@ SchedulerResult ContextAwareScheduler::schedule(
     maximumWaitingTime = 0;
     averageAgingBonus = 0.0;
     processesRescuedByAging = 0;
+    contextChanges.clear();
 
     ContextScoreEngine scoreEngine;
     for (const auto& process : processes) {
@@ -73,12 +89,27 @@ SchedulerResult ContextAwareScheduler::schedule(
     int currentTime = 0;
     int completedCount = 0;
     std::vector<bool> completed(dynamicProcesses.size(), false);
+    std::size_t nextContextUpdate = 0;
     double waitingSum = 0.0;
     double turnaroundSum = 0.0;
     double responseSum = 0.0;
     double agingBonusSum = 0.0;
 
     while (completedCount < static_cast<int>(dynamicProcesses.size())) {
+        if (contextTrace != nullptr) {
+            while (nextContextUpdate < contextTrace->size()
+                && (*contextTrace)[nextContextUpdate].time <= currentTime) {
+                applyContextSnapshot(
+                    (*contextTrace)[nextContextUpdate],
+                    context,
+                    scoreEngine,
+                    completed,
+                    currentTime,
+                    -1);
+                ++nextContextUpdate;
+            }
+        }
+
         std::vector<int> ready;
         for (int i = 0; i < static_cast<int>(dynamicProcesses.size()); ++i) {
             if (!completed[i]
@@ -188,8 +219,21 @@ SchedulerResult ContextAwareScheduler::schedule(
         turnaroundSum += stat.turnaroundTime;
         responseSum += stat.responseTime;
 
-        currentTime = stat.completionTime;
         completed[selected] = true;
+        currentTime = stat.completionTime;
+        if (contextTrace != nullptr) {
+            while (nextContextUpdate < contextTrace->size()
+                && (*contextTrace)[nextContextUpdate].time <= currentTime) {
+                applyContextSnapshot(
+                    (*contextTrace)[nextContextUpdate],
+                    context,
+                    scoreEngine,
+                    completed,
+                    currentTime,
+                    process.pid);
+                ++nextContextUpdate;
+            }
+        }
         ++completedCount;
     }
 
@@ -208,6 +252,79 @@ SchedulerResult ContextAwareScheduler::schedule(
         ? 0.0
         : agingBonusSum / static_cast<double>(result.processStats.size());
     return result;
+}
+
+void ContextAwareScheduler::applyContextSnapshot(
+    const ContextSnapshot& snapshot,
+    ContextManager& context,
+    ContextScoreEngine& scoreEngine,
+    const std::vector<bool>& completed,
+    int appliedAt,
+    int runningPid) {
+    context.updateBatteryLevel(snapshot.battery);
+    context.updateTemperature(snapshot.temperature);
+    context.updateCPUUtilization(snapshot.cpuUtilization);
+    context.updateUserActivity(snapshot.userActive);
+
+    ContextChange change;
+    change.snapshot = snapshot;
+    change.appliedAt = appliedAt;
+    change.runningPid = runningPid;
+    for (std::size_t i = 0; i < dynamicProcesses.size(); ++i) {
+        if (completed[i]) {
+            continue;
+        }
+
+        DynamicProcess& dynamicProcess = dynamicProcesses[i];
+        const double oldPriority = dynamicProcess.dynamicPriority;
+        change.prioritiesBefore.push_back({
+            dynamicProcess.process.pid,
+            oldPriority
+        });
+        dynamicProcess.contextScore =
+            scoreEngine.calculateContextScore(dynamicProcess.process, context);
+        dynamicProcess.processImpactScore =
+            calculateProcessImpact(dynamicProcess.process, context);
+        dynamicProcess.baseDynamicPriority =
+            dynamicProcess.process.getPriority()
+            + dynamicProcess.contextScore / 10.0
+            + dynamicProcess.processImpactScore / 10.0;
+        const int waitingTime = std::max(
+            0, snapshot.time - dynamicProcess.process.arrivalTime);
+        dynamicProcess.agingBonus = waitingTime * 0.05;
+        dynamicProcess.dynamicPriority =
+            dynamicProcess.baseDynamicPriority + dynamicProcess.agingBonus;
+        change.prioritiesAfter.push_back({
+            dynamicProcess.process.pid,
+            dynamicProcess.dynamicPriority
+        });
+
+        if (oldPriority != dynamicProcess.dynamicPriority) {
+            change.priorityChanges.push_back({
+                dynamicProcess.process.pid,
+                oldPriority,
+                dynamicProcess.dynamicPriority
+            });
+        }
+    }
+    auto orderByPriority = [](const std::vector<PriorityObservation>& values) {
+        std::vector<PriorityObservation> ordered = values;
+        std::sort(ordered.begin(), ordered.end(),
+            [](const PriorityObservation& left, const PriorityObservation& right) {
+                if (left.priority != right.priority) {
+                    return left.priority > right.priority;
+                }
+                return left.pid < right.pid;
+            });
+        std::vector<int> pids;
+        for (const auto& value : ordered) {
+            pids.push_back(value.pid);
+        }
+        return pids;
+    };
+    change.readyQueueBefore = orderByPriority(change.prioritiesBefore);
+    change.readyQueueAfter = orderByPriority(change.prioritiesAfter);
+    contextChanges.push_back(change);
 }
 
 void ContextAwareScheduler::displayExecutionOrder() const {
@@ -255,4 +372,54 @@ double ContextAwareScheduler::getAverageAgingBonus() const {
 
 int ContextAwareScheduler::getProcessesRescuedByAging() const {
     return processesRescuedByAging;
+}
+
+const std::vector<ContextChange>& ContextAwareScheduler::getContextChanges() const {
+    return contextChanges;
+}
+
+void ContextAwareScheduler::displayContextChanges() const {
+    for (const auto& change : contextChanges) {
+        const ContextSnapshot& snapshot = change.snapshot;
+        std::cout << "\n====================================================\n";
+        std::cout << "CONTEXT UPDATE\n";
+        std::cout << "====================================================\n";
+        std::cout << "Time: " << snapshot.time << "\n\n";
+        std::cout << "Battery: " << snapshot.battery << "%\n";
+        std::cout << "Temperature: " << snapshot.temperature << "C\n";
+        std::cout << "CPU Utilization: " << snapshot.cpuUtilization << "%\n";
+        std::cout << "User Active: " << (snapshot.userActive ? "YES" : "NO")
+                  << "\n";
+        std::cout << "\nAffected Processes:\n";
+        if (change.priorityChanges.empty()) {
+            std::cout << "None\n";
+        } else {
+            std::cout << "PID   Previous Priority   New Priority\n";
+            for (const auto& priorityChange : change.priorityChanges) {
+                std::cout << std::left << std::setw(6) << priorityChange.pid
+                          << std::setw(21) << priorityChange.oldPriority
+                          << priorityChange.newPriority << "\n";
+            }
+        }
+        std::cout << "====================================================\n";
+    }
+}
+
+bool ContextAwareScheduler::exportContextChanges(
+    const std::string& filename) const {
+    std::ofstream output(filename);
+    if (!output.is_open()) {
+        std::cerr << "Unable to write context change log: " << filename << "\n";
+        return false;
+    }
+
+    output << "Time,Battery,Temperature,CPUUtilization,UserActive\n";
+    output << std::fixed << std::setprecision(2);
+    for (const auto& change : contextChanges) {
+        const ContextSnapshot& snapshot = change.snapshot;
+        output << snapshot.time << "," << snapshot.battery << ","
+               << snapshot.temperature << "," << snapshot.cpuUtilization
+               << "," << (snapshot.userActive ? 1 : 0) << "\n";
+    }
+    return true;
 }

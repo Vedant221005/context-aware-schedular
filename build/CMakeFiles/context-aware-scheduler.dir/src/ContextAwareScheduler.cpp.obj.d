@@ -691,5 +691,25 @@ CMakeFiles/context-aware-scheduler.dir/src/ContextAwareScheduler.cpp.obj: \
   C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/print \
   D:/4year/context-aware-schedular/src/../include/ContextScoreEngine.h \
   D:/4year/context-aware-schedular/src/../include/Process.h \
+  D:/4year/context-aware-schedular/src/../include/ContextTraceLoader.h \
   D:/4year/context-aware-schedular/src/../include/SchedulerResult.h \
-  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/iomanip
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/fstream \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/path.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/iomanip \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/filesystem \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/copy_options.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/directory_entry.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/file_status.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/file_type.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/perms.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/file_time_type.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__chrono/file_clock.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/filesystem_error.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/operations.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/perm_options.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/space_info.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/directory_iterator.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/directory_options.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/path_iterator.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/recursive_directory_iterator.h \
+  C:/tools/llvm-mingw/llvm-mingw-20260616-ucrt-x86_64/include/c++/v1/__filesystem/u8path.h

@@ -200,6 +200,30 @@ src/ContextScoreEngine.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/ContextScoreEngine.cpp.s
 .PHONY : src/ContextScoreEngine.cpp.s
 
+src/ContextTraceLoader.obj: src/ContextTraceLoader.cpp.obj
+.PHONY : src/ContextTraceLoader.obj
+
+# target to build an object file
+src/ContextTraceLoader.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.obj
+.PHONY : src/ContextTraceLoader.cpp.obj
+
+src/ContextTraceLoader.i: src/ContextTraceLoader.cpp.i
+.PHONY : src/ContextTraceLoader.i
+
+# target to preprocess a source file
+src/ContextTraceLoader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.i
+.PHONY : src/ContextTraceLoader.cpp.i
+
+src/ContextTraceLoader.s: src/ContextTraceLoader.cpp.s
+.PHONY : src/ContextTraceLoader.s
+
+# target to generate assembly for a file
+src/ContextTraceLoader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\context-aware-scheduler.dir\build.make CMakeFiles/context-aware-scheduler.dir/src/ContextTraceLoader.cpp.s
+.PHONY : src/ContextTraceLoader.cpp.s
+
 src/DatasetLoader.obj: src/DatasetLoader.cpp.obj
 .PHONY : src/DatasetLoader.obj
 
@@ -410,6 +434,9 @@ help:
 	@echo ... src/ContextScoreEngine.obj
 	@echo ... src/ContextScoreEngine.i
 	@echo ... src/ContextScoreEngine.s
+	@echo ... src/ContextTraceLoader.obj
+	@echo ... src/ContextTraceLoader.i
+	@echo ... src/ContextTraceLoader.s
 	@echo ... src/DatasetLoader.obj
 	@echo ... src/DatasetLoader.i
 	@echo ... src/DatasetLoader.s

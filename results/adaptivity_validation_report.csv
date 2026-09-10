@@ -1,0 +1,5 @@
+EventTime,AppliedAt,RunningProcess,PID,PriorityBefore,PriorityAfter,ReadyQueueBefore,ReadyQueueAfter,WasSchedulingOrderChanged,WasReadyQueueReordered,WasRunningProcessReplaced
+5,10,P1,P2,11.7,7.8,"P5 P3 P4 P2","P3 P4 P2 P5",YES,YES,NO
+5,10,P1,P3,15.7,12.2,"P5 P3 P4 P2","P3 P4 P2 P5",YES,YES,NO
+5,10,P1,P4,13.7,9.65,"P5 P3 P4 P2","P3 P4 P2 P5",YES,YES,NO
+5,10,P1,P5,17.7,6.65,"P5 P3 P4 P2","P3 P4 P2 P5",YES,YES,NO
