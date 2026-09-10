@@ -1,3 +1,0 @@
-D:/4year/context-aware-schedular/build/CMakeFiles/context-aware-scheduler.dir
-D:/4year/context-aware-schedular/build/CMakeFiles/edit_cache.dir
-D:/4year/context-aware-schedular/build/CMakeFiles/rebuild_cache.dir
