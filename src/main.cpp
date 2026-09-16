@@ -11,6 +11,7 @@
 #include "../include/ContextScoreEngine.h"
 #include "../include/ContextTraceLoader.h"
 #include "../include/AdaptiveRoundRobin.h"
+#include "../include/BenchmarkRunner.h"
 #include "../include/EDFScheduler.h"
 #include "../include/DatasetLoader.h"
 #include "../include/ExperimentRunner.h"
@@ -616,6 +617,7 @@ int main() {
         std::cout << "10. Run Adaptive Round Robin\n";
         std::cout << "11. Run EDF Scheduler\n";
         std::cout << "12. Run Real-Time Context Mode\n";
+        std::cout << "13. Run Benchmark Analysis\n";
         std::cout << "Select an option: ";
 
         int choice = 0;
@@ -663,6 +665,11 @@ int main() {
             case 12:
                 runContextAwareScheduler(workload);
                 break;
+            case 13: {
+                BenchmarkRunner runner;
+                runner.run();
+                break;
+            }
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
